@@ -103,8 +103,8 @@ func (client Client) GetPlayer(id string) (*Player, error) {
 
 //Page lets you specify pagination options for the GetMatchList() method
 type Page struct{
-	Offset *int
-	Limit *int
+	Offset int
+	Limit int
 }
 
 //MatchFilter lets you decide how to filter the matches retrived by GetMatchList()
@@ -125,11 +125,11 @@ func createMatchListParams(page *Page, sort string, filter *MatchFilter) string 
 	urlParams := make([]string, 0)
 	//page params
 	if page != nil{
-		if page.Offset != nil {
-			urlParams = append(urlParams, "page[offset]=" + strconv.Itoa(*page.Offset))
+		if page.Offset != 0 {
+			urlParams = append(urlParams, "page[offset]=" + strconv.Itoa(page.Offset))
 		}
-		if page.Limit != nil {
-			urlParams = append(urlParams, "page[limit]=" + strconv.Itoa(*page.Limit))
+		if page.Limit != 0 {
+			urlParams = append(urlParams, "page[limit]=" + strconv.Itoa(page.Limit))
 		}
 	}
 	//sort param
