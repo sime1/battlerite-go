@@ -1,3 +1,4 @@
+//	Package battlerite is an SDK for the official Battlerite API written in Go.
 package battlerite
 
 import (
@@ -7,6 +8,7 @@ import (
 	"errors"
 	"strconv"
 	"strings"
+	"fmt"
 )
 
 const URL = "https://api.dc01.gamelockerapp.com/shards/global"
@@ -63,6 +65,7 @@ func (client Client) GetMatch(id string) (*Match, error) {
 	return match, nil
 }
 
+//GetPlayerList retrieves a list od players from the API.
 func (client Client) GetPlayerList( filter *PlayerFilter) ([]*Player, error){
 	url := URL + "/players" + createPlayerListParams(filter)
 	req := client.getRequest(url)
@@ -101,6 +104,31 @@ func (client Client) GetPlayer(id string) (*Player, error) {
 	return player, nil
 }
 
+//GetTeamList retrieves a list of teams from the API.
+func (client Client) GetTeamList( tag *TeamTag) ([]*Team, error){
+	if tag == nil || len(tag.PlayerIds) < 1 {
+		return nil, errors.New("Error: missing required parameter")
+	}
+	url := fmt.Sprintf("%s/teams?tag[playerIds]=%s&tag[season]=%d", URL, strings.Join(tag.PlayerIds, ","), tag.Season)
+	req := client.getRequest(url)
+	httpClient := &http.Client{}
+	res,_ := httpClient.Do(req)
+	defer res.Body.Close()
+	teams := make([]*Team, 0)
+	tempTeams,err := jsonapi.UnmarshalManyPayload(res.Body, reflect.TypeOf(new(Team)));
+	if err != nil {
+		return nil, err
+	}
+	for _,t := range tempTeams {
+		team, success := t.(*Team);
+		if !success {
+			return nil, errors.New("Typecast error: Team");
+		}
+		teams = append(teams,team)
+	}
+	return teams, nil
+}
+
 //Page lets you specify pagination options for the GetMatchList() method
 type Page struct{
 	Offset int
@@ -120,6 +148,13 @@ type PlayerFilter struct {
 	PlayerIds []string
 	SteamIds []string
 }
+
+//TeamTag provides GetTeamList the required parametes for querying the API
+type TeamTag struct {
+	PlayerIds []string
+	Season int
+}
+
 
 func createMatchListParams(page *Page, sort string, filter *MatchFilter) string {
 	urlParams := make([]string, 0)

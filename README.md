@@ -65,3 +65,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 0.2.0: Player functionalities + README
 
 0.2.1: minor bug fixes
+
+0.3.0: Team functionalities
