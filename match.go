@@ -7,6 +7,12 @@ import (
 	"io/ioutil"
 )
 
+//MatchTags represetns the possible tags a Match object can have. Due to Go JSON library restricitons, it has to be a map.
+//Possible keys for this map are:
+//	"rankingType": indicates the rankig type of the match ("RANKED", "UNRANKED" or "NONE" in case of private matches). Its value is a string
+//	"serverType": indicates the type of
+type MatchTags map[string]interface{}
+
 type Match struct{
 	Id string `jsonapi:"primary,match"`
 	CreatedAt string `jsonapi:"attr,createdAt"`
@@ -16,6 +22,7 @@ type Match struct{
 	ShardId string `jsonapi:"attr,shardId"`
 	TitleId string `jsonapi:"attr,titleId"`
 	Stats Stats `jsonapi:"attr,stats"`
+	Tags MatchTags `jsonapi:"attr,tags"`
 	Assets []*Asset `jsonapi:"relation,assets"`
 	Rosters []*Roster `jsonapi:"relation,rosters"`
 	Rounds []*Round `jsonapi:"relation,rounds"`

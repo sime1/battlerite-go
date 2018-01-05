@@ -67,3 +67,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 0.2.1: minor bug fixes
 
 0.3.0: Team functionalities
+
+0.3.1: Update for API V1.6.0

@@ -140,6 +140,9 @@ type MatchFilter struct{
 	CreatedAtStart *string
 	CreatedAtEnd *string
 	PlayerIds []string
+	PatchVersion []string
+	ServerType []string
+	RankingType *string
 }
 
 //PlayerFilter lets you decide which players GetPlayerList should retrieve
@@ -181,6 +184,15 @@ func createMatchListParams(page *Page, sort string, filter *MatchFilter) string 
 		}
 		if len(filter.PlayerIds) > 0 {
 			urlParams = append(urlParams, "filter[playerIds]=" + strings.Join(filter.PlayerIds, ","))
+		}
+		if len(filter.PatchVersion) > 0 {
+			urlParams = append(urlParams, "filter[patchVersion]=" + strings.Join(filter.PatchVersion, ","))
+		}
+		if len(filter.ServerType) > 0 {
+			urlParams = append(urlParams, "filter[serverType]=" + strings.Join(filter.ServerType, ","))
+		}
+		if filter.RankingType != nil {
+			urlParams = append(urlParams, "filter[rankingType]=" + *filter.RankingType)
 		}
 	}
 	if len(urlParams) > 0{
